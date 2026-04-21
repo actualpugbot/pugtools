@@ -1,0 +1,202 @@
+{
+  "brand": {
+    "name": "pugtools",
+    "tagline": "Minecraft tools for builders, creators, and players.",
+    "description": "Fast Minecraft utilities and practical guides to help you build, plan, optimize, and create without bouncing between unrelated sites.",
+    "shortPitch": "One place for practical Minecraft tools.",
+    "audiences": [
+      "Builders",
+      "Content creators",
+      "Map makers",
+      "Technical players",
+      "General players"
+    ]
+  },
+  "categories": [
+    {
+      "slug": "building",
+      "name": "Building tools",
+      "description": "Shape planners and layout helpers for circles, curves, arches, and cleaner builds."
+    },
+    {
+      "slug": "optimization",
+      "name": "Optimization tools",
+      "description": "Planning utilities that cut guesswork, cost, and repeated trial and error."
+    },
+    {
+      "slug": "reference",
+      "name": "Guides and reference",
+      "description": "Fast lookup pages and practical references to keep nearby while you play."
+    },
+    {
+      "slug": "creator",
+      "name": "Creator tools",
+      "description": "Utilities that help with exports, showcases, packs, and explainer-friendly workflows."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Circle Generator",
+      "shortName": "Circle",
+      "description": "Plan block-perfect circles with diameter controls, quadrant views, and quick PNG export.",
+      "path": "/circle/",
+      "publicSlug": "circle",
+      "slug": "circle",
+      "sourceRepo": "circle-generator",
+      "runtime": "static",
+      "kind": "Building utility",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Builder favorite",
+      "featured": true,
+      "featuredRank": 4,
+      "categories": [
+        "building",
+        "creator"
+      ],
+      "audiences": [
+        "builders",
+        "map-makers",
+        "creators"
+      ]
+    },
+    {
+      "name": "Curve Generator",
+      "shortName": "Curve",
+      "description": "Lay out arches and custom curves with editable handles, coordinate copy, and fast preview export.",
+      "path": "/curve/",
+      "publicSlug": "curve",
+      "slug": "curve",
+      "sourceRepo": "curve-generator",
+      "runtime": "static",
+      "kind": "Layout planner",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Smooth shape planning",
+      "featured": true,
+      "featuredRank": 5,
+      "categories": [
+        "building",
+        "creator"
+      ],
+      "audiences": [
+        "builders",
+        "map-makers",
+        "technical-players"
+      ]
+    },
+    {
+      "name": "Enchant Optimizer",
+      "shortName": "Enchant",
+      "description": "Find lower-cost anvil merge orders for stacked enchant plans without spreadsheet cleanup.",
+      "path": "/enchant/",
+      "publicSlug": "enchant",
+      "slug": "enchant",
+      "sourceRepo": "enchant-optimizer",
+      "runtime": "static",
+      "kind": "Optimization planner",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Survival shortcut",
+      "featured": true,
+      "featuredRank": 3,
+      "categories": [
+        "optimization"
+      ],
+      "audiences": [
+        "technical-players",
+        "general-players"
+      ]
+    },
+    {
+      "name": "Mob Dub",
+      "shortName": "Mob Dub",
+      "description": "Browse mob sound sets, swap in your own takes, and export a resource pack without the manual cleanup.",
+      "path": "/mob-dub/",
+      "publicSlug": "mob-dub",
+      "slug": "mob-dub",
+      "sourceRepo": "mob-dub",
+      "runtime": "vite-react",
+      "kind": "Creator workflow",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Pack-building helper",
+      "featured": true,
+      "featuredRank": 1,
+      "categories": [
+        "creator",
+        "reference"
+      ],
+      "audiences": [
+        "creators",
+        "map-makers",
+        "general-players"
+      ]
+    },
+    {
+      "name": "Conversion Studio",
+      "shortName": "Convert",
+      "description": "Convert audio and image files between formats in the browser — no uploads, no installs.",
+      "path": "/conversion-studio/",
+      "publicSlug": "conversion-studio",
+      "slug": "conversion-studio",
+      "sourceRepo": "conversion-studio",
+      "runtime": "static",
+      "kind": "File utility",
+      "status": "live",
+      "statusLabel": "Live now",
+      "featured": true,
+      "featuredRank": 6,
+      "categories": ["creator"],
+      "audiences": ["creators", "map-makers"]
+    },
+    {
+      "name": "Palette Builder",
+      "shortName": "Palette",
+      "description": "Build 8-block Minecraft color palettes using color theory — pick a seed color, choose a harmony mode, and generate matched block combinations.",
+      "path": "/huell/",
+      "publicSlug": "huell",
+      "slug": "huell",
+      "sourceRepo": "huell",
+      "runtime": "vite-react",
+      "kind": "Building utility",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Color theory for builders",
+      "featured": true,
+      "featuredRank": 7,
+      "categories": [
+        "building",
+        "creator"
+      ],
+      "audiences": [
+        "builders",
+        "map-makers",
+        "creators"
+      ]
+    },
+    {
+      "name": "Potions Plus",
+      "shortName": "Potions",
+      "description": "Browse brewing chains, search potion outcomes, and move through recipes without tab chaos.",
+      "path": "/potions/",
+      "publicSlug": "potions",
+      "slug": "potions",
+      "sourceRepo": "potions-plus",
+      "runtime": "static",
+      "kind": "Reference guide",
+      "status": "live",
+      "statusLabel": "Live now",
+      "highlight": "Brewing lookup",
+      "featured": true,
+      "featuredRank": 2,
+      "categories": [
+        "reference"
+      ],
+      "audiences": [
+        "general-players",
+        "creators"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">pugtools social card</title>
+  <desc id="desc">Practical Minecraft tools for builders, creators, and players.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f4efe3"/>
+      <stop offset="100%" stop-color="#ebe1cf"/>
+    </linearGradient>
+    <linearGradient id="stamp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cf8a4d"/>
+      <stop offset="100%" stop-color="#3d7752"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#d8ccb8" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#f9f4ea"/>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.55"/>
+  <circle cx="1040" cy="120" r="180" fill="#f1dba4" opacity="0.42"/>
+  <circle cx="180" cy="560" r="210" fill="#c9ddd0" opacity="0.5"/>
+
+  <rect x="70" y="62" width="1060" height="506" rx="38" fill="url(#panel)" stroke="#d9c9ae" stroke-width="2"/>
+
+  <rect x="112" y="112" width="92" height="92" rx="24" fill="url(#stamp)"/>
+  <text x="158" y="168" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-size="30" font-weight="800" fill="#ffffff" letter-spacing="4">PT</text>
+
+  <text x="238" y="146" font-family="Bricolage Grotesque, Arial, sans-serif" font-size="54" font-weight="800" fill="#3c342d" letter-spacing="5">PUGTOOLS</text>
+  <text x="238" y="190" font-family="Instrument Sans, Arial, sans-serif" font-size="24" font-weight="600" fill="#695c4e">Practical Minecraft tools for builders, creators, and players.</text>
+
+  <text x="112" y="282" font-family="Bricolage Grotesque, Arial, sans-serif" font-size="70" font-weight="800" fill="#302a24">
+    One place for
+  </text>
+  <text x="112" y="352" font-family="Bricolage Grotesque, Arial, sans-serif" font-size="70" font-weight="800" fill="#302a24">
+    practical Minecraft tools.
+  </text>
+
+  <text x="112" y="422" font-family="Instrument Sans, Arial, sans-serif" font-size="27" font-weight="500" fill="#6c5e50">
+    Circles, curves, enchants, potions, creator workflows, and more.
+  </text>
+
+  <g transform="translate(112 466)">
+    <rect width="164" height="54" rx="27" fill="#3d7752"/>
+    <text x="82" y="34" text-anchor="middle" font-family="Instrument Sans, Arial, sans-serif" font-size="21" font-weight="700" fill="#ffffff">Browse tools</text>
+  </g>
+
+  <g transform="translate(776 260)">
+    <rect width="280" height="212" rx="28" fill="#f7f1e6" stroke="#dccdb5" stroke-width="2"/>
+    <text x="32" y="42" font-family="Bricolage Grotesque, Arial, sans-serif" font-size="22" font-weight="800" fill="#3c342d" letter-spacing="2">CURRENT LINEUP</text>
+    <text x="32" y="88" font-family="Instrument Sans, Arial, sans-serif" font-size="22" font-weight="600" fill="#5f5448">Circle Generator</text>
+    <text x="32" y="122" font-family="Instrument Sans, Arial, sans-serif" font-size="22" font-weight="600" fill="#5f5448">Curve Generator</text>
+    <text x="32" y="156" font-family="Instrument Sans, Arial, sans-serif" font-size="22" font-weight="600" fill="#5f5448">Enchant Optimizer</text>
+    <text x="32" y="190" font-family="Instrument Sans, Arial, sans-serif" font-size="22" font-weight="600" fill="#5f5448">Mob Dub</text>
+    <text x="32" y="224" font-family="Instrument Sans, Arial, sans-serif" font-size="22" font-weight="600" fill="#5f5448">Potions Plus</text>
+  </g>
+</svg>
