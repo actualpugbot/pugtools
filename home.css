@@ -4,15 +4,16 @@
   --bg:          #080c13;
   --bg-card:     #0d1720;
   --bg-hover:    #111f2e;
-  --line:        rgba(130, 170, 215, 0.08);
-  --line-hover:  rgba(48, 210, 110, 0.40);
+  --line:        rgba(91, 159, 214, 0.10);
+  --line-hover:  rgba(91, 159, 214, 0.45);
   --ink:         #d6e8f4;
   --ink-soft:    #64809a;
   --ink-dim:     #3b5169;
-  --green:       #2dc86a;
-  --green-dim:   rgba(45, 200, 106, 0.12);
+  --blue:        #5b9fd6;
+  --blue-dim:    rgba(91, 159, 214, 0.12);
+  --teal:        #2dd4bf;
   --amber:       #f0ac30;
-  --focus:       #2dc86a;
+  --focus:       #5b9fd6;
   --radius:      1.25rem;
   --radius-sm:   0.65rem;
   --max-w:       1100px;
@@ -36,9 +37,9 @@ body {
   color: var(--ink);
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle at 14% 10%, rgba(45, 200, 106, 0.16) 0%, transparent 28%),
+    radial-gradient(circle at 14% 10%, rgba(91, 159, 214, 0.14) 0%, transparent 28%),
     radial-gradient(circle at 84% 8%, rgba(240, 172, 48, 0.12) 0%, transparent 22%),
-    radial-gradient(circle at 50% 100%, rgba(76, 119, 173, 0.18) 0%, transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(45, 212, 191, 0.12) 0%, transparent 34%),
     linear-gradient(160deg, #060b14 0%, #08111b 52%, #03070f 100%);
   background-size: 140% 140%, 140% 140%, 130% 130%, 100% 100%;
   background-attachment: fixed;
@@ -64,7 +65,7 @@ a {
   z-index: 200;
   padding: 0.55rem 1rem;
   border-radius: 999px;
-  background: var(--green);
+  background: var(--blue);
   color: #fff;
   font: 700 0.88rem/1 "Inter", sans-serif;
   transform: translateY(-200%);
@@ -97,13 +98,13 @@ a {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.72rem;
-  background: linear-gradient(148deg, #38c872, #1e7845);
+  background: linear-gradient(148deg, #5b9fd6, #2d6d9e);
   color: #fff;
   font: 700 0.72rem/1 "Silkscreen", monospace;
   flex-shrink: 0;
   box-shadow:
-    0 0 0 1px rgba(56, 200, 114, 0.28),
-    0 6px 18px rgba(28, 120, 65, 0.42);
+    0 0 0 1px rgba(91, 159, 214, 0.28),
+    0 6px 18px rgba(29, 78, 120, 0.42);
 }
 
 .nav-links {
@@ -127,8 +128,8 @@ a {
 .nav-link:hover,
 .nav-link:focus-visible {
   color: var(--ink);
-  border-color: rgba(130, 170, 215, 0.2);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(91, 159, 214, 0.25);
+  background: rgba(91, 159, 214, 0.04);
 }
 
 /* --- hero --- */
@@ -148,7 +149,7 @@ a {
 
 .hero__title em {
   font-style: normal;
-  background: linear-gradient(128deg, var(--green) 25%, var(--amber));
+  background: linear-gradient(128deg, var(--blue) 25%, var(--teal));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -180,9 +181,9 @@ a {
 }
 
 .stat-pill--green {
-  border-color: rgba(45, 200, 106, 0.3);
-  background: rgba(45, 200, 106, 0.09);
-  color: var(--green);
+  border-color: rgba(91, 159, 214, 0.3);
+  background: rgba(91, 159, 214, 0.09);
+  color: var(--blue);
 }
 
 /* --- tools section --- */
@@ -213,7 +214,7 @@ a {
   display: flex;
   flex-direction: column;
   grid-column: span 2;
-  border: 1px solid rgba(144, 174, 206, 0.18);
+  border: 1px solid rgba(91, 159, 214, 0.14);
   border-radius: var(--radius);
   background:
     linear-gradient(180deg, rgba(20, 33, 45, 0.98) 0%, rgba(11, 20, 30, 0.99) 100%);
@@ -246,7 +247,7 @@ a {
 
 .tool-card:hover,
 .tool-card:focus-visible {
-  border-color: rgba(174, 204, 232, 0.28);
+  border-color: rgba(91, 159, 214, 0.32);
   background:
     linear-gradient(180deg, rgba(23, 37, 51, 0.99) 0%, rgba(13, 24, 35, 0.99) 100%);
   transform: translateY(-4px);
@@ -262,7 +263,7 @@ a {
 
 .tool-card--soon:hover,
 .tool-card--soon:focus-visible {
-  border-color: rgba(144, 174, 206, 0.18);
+  border-color: rgba(91, 159, 214, 0.14);
   background: linear-gradient(180deg, rgba(20, 33, 45, 0.98) 0%, rgba(11, 20, 30, 0.99) 100%);
   transform: none;
   box-shadow:
@@ -273,13 +274,13 @@ a {
 .tool-card__preview {
   position: relative;
   aspect-ratio: 16 / 10;
-  border-bottom: 1px solid rgba(130, 170, 215, 0.14);
+  border-bottom: 1px solid rgba(91, 159, 214, 0.12);
   overflow: hidden;
   background-color: #09131d;
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(9, 14, 22, 0.08) 30%, rgba(4, 8, 14, 0.46) 100%),
     var(--tool-shot),
-    linear-gradient(140deg, rgba(110, 144, 180, 0.12) 0%, rgba(20, 30, 43, 0.06) 54%, transparent 76%);
+    linear-gradient(140deg, rgba(91, 159, 214, 0.10) 0%, rgba(20, 30, 43, 0.06) 54%, transparent 76%);
   background-size:
     auto,
     cover,
@@ -303,7 +304,7 @@ a {
 
 .tool-card:hover .tool-card__preview,
 .tool-card:focus-visible .tool-card__preview {
-  border-bottom-color: rgba(174, 204, 232, 0.18);
+  border-bottom-color: rgba(91, 159, 214, 0.22);
 }
 
 .tool-card__body {
