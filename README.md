@@ -20,10 +20,10 @@ This repo is the hub site, not the individual tool implementations. Each live to
 - `Circle Generator`
 - `Enchant Optimizer`
 - `Curve Generator`
+- `Conversion Studio`
 
 Coming soon:
 
-- `Conversion Studio`
 - `Palette Builder`
 
 ## Local preview

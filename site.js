@@ -89,6 +89,18 @@ const FALLBACK_MANIFEST = {
       featuredRank: 2,
       categories: ["reference"],
     },
+    {
+      name: "Conversion Studio",
+      shortName: "Convert",
+      description: "Convert audio and image files between formats in the browser without uploads or installs.",
+      path: "/conversion-studio/",
+      slug: "conversion-studio",
+      kind: "File utility",
+      statusLabel: "Live now",
+      highlight: "Browser-based conversion",
+      featuredRank: 6,
+      categories: ["creator"],
+    },
   ],
 };
 
