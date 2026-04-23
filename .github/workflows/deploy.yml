@@ -31,7 +31,8 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html home.css site.js social-card.svg .nojekyll _site/
-          cp -R shared images tools _site/
+          cp -R shared images tools favicon _site/
+          cp favicon/favicon.ico _site/favicon.ico
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
