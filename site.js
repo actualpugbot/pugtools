@@ -104,7 +104,28 @@ const FALLBACK_MANIFEST = {
   ],
 };
 
+const SPACE_BACKGROUND_DEFAULTS = {
+  pixelSize: 6,
+  starDensity: 0.55,
+  starBrightness: 0.30,
+  bgVoid: "#060914",
+  bgPurple: "#18122b",
+  bgBlue: "#0f2742",
+  bgCyan: "#0f3f4f",
+  darkness: 0.28,
+  contentDim: 0.30,
+};
+
+const SPACE_STAR_COLORS = [
+  [225, 238, 255],
+  [190, 215, 240],
+  [255, 244, 204],
+  [150, 210, 235],
+];
+
 async function bootstrapSite() {
+  initSpaceBackground();
+
   const manifest = await loadManifest();
   const view = document.body.dataset.view || "";
 
@@ -117,6 +138,217 @@ async function bootstrapSite() {
   }
 
   bindAnalyticsInteractions();
+}
+
+function initSpaceBackground() {
+  const canvas = document.getElementById("spaceCanvas");
+  const ctx = canvas?.getContext("2d", { alpha: true });
+
+  if (!canvas || !ctx) {
+    return;
+  }
+
+  const state = { ...SPACE_BACKGROUND_DEFAULTS };
+  let width = 0;
+  let height = 0;
+  let lowW = 0;
+  let lowH = 0;
+  let stars = [];
+  let baseImage = null;
+  let animationFrame = 0;
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function rgb(color, alpha = 1) {
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+  }
+
+  function hexToRgb(hex) {
+    const normalized = hex.replace("#", "");
+    return [
+      parseInt(normalized.slice(0, 2), 16),
+      parseInt(normalized.slice(2, 4), 16),
+      parseInt(normalized.slice(4, 6), 16),
+    ];
+  }
+
+  function mix(a, b, t) {
+    return [
+      a[0] + (b[0] - a[0]) * t,
+      a[1] + (b[1] - a[1]) * t,
+      a[2] + (b[2] - a[2]) * t,
+    ];
+  }
+
+  function darken(color, amount) {
+    const factor = 1 - amount;
+    return [
+      color[0] * factor,
+      color[1] * factor,
+      color[2] * factor,
+    ];
+  }
+
+  function backgroundPalette() {
+    return {
+      void: hexToRgb(state.bgVoid),
+      purple: hexToRgb(state.bgPurple),
+      blue: hexToRgb(state.bgBlue),
+      cyan: hexToRgb(state.bgCyan),
+    };
+  }
+
+  function applyCssVariables() {
+    document.documentElement.style.setProperty("--void", state.bgVoid);
+    document.documentElement.style.setProperty("--deep-purple", state.bgPurple);
+    document.documentElement.style.setProperty("--space-blue", state.bgBlue);
+    document.documentElement.style.setProperty("--space-cyan", state.bgCyan);
+    document.documentElement.style.setProperty("--content-dim", state.contentDim);
+  }
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    lowW = Math.max(1, Math.ceil(width / state.pixelSize));
+    lowH = Math.max(1, Math.ceil(height / state.pixelSize));
+    canvas.width = lowW;
+    canvas.height = lowH;
+    ctx.imageSmoothingEnabled = false;
+    createBaseImage();
+    createStars();
+    draw(performance.now());
+  }
+
+  function createBaseImage() {
+    const image = ctx.createImageData(lowW, lowH);
+    const data = image.data;
+    const bg = backgroundPalette();
+    const topShade = mix(bg.void, bg.purple, 0.34);
+    const midShade = mix(bg.blue, bg.purple, 0.28);
+    const bottomShade = mix(bg.blue, bg.cyan, 0.34);
+    const lowerGlow = mix(bg.cyan, bg.blue, 0.52);
+
+    applyCssVariables();
+
+    for (let y = 0; y < lowH; y += 1) {
+      for (let x = 0; x < lowW; x += 1) {
+        const nx = x / lowW;
+        const ny = y / lowH;
+        const vertical = Math.min(1, ny);
+        const centerQuiet = Math.max(0, 1 - Math.hypot(nx - 0.5, ny - 0.45) * 1.7);
+        const bottomCool = Math.max(0, 1 - Math.hypot(nx - 0.68, ny - 1.03) * 1.15);
+        const topDepth = Math.max(0, 1 - Math.hypot(nx - 0.42, ny + 0.08) * 1.25);
+        const sideFalloff = Math.abs(nx - 0.5) * 0.18;
+
+        let c = vertical < 0.52
+          ? mix(topShade, midShade, vertical / 0.52)
+          : mix(midShade, bottomShade, (vertical - 0.52) / 0.48);
+
+        c = mix(c, bg.void, topDepth * 0.18 + centerQuiet * 0.08 + sideFalloff);
+        c = mix(c, lowerGlow, bottomCool * 0.18);
+        c = darken(c, state.darkness);
+
+        const i = (y * lowW + x) * 4;
+        data[i] = c[0];
+        data[i + 1] = c[1];
+        data[i + 2] = c[2];
+        data[i + 3] = 255;
+      }
+    }
+
+    baseImage = image;
+  }
+
+  function createStars() {
+    const count = Math.floor((width * height) / 4200 * state.starDensity);
+
+    stars = Array.from({ length: count }, () => ({
+      x: Math.floor(Math.random() * lowW),
+      y: Math.floor(Math.random() * lowH),
+      color: SPACE_STAR_COLORS[Math.floor(Math.random() * SPACE_STAR_COLORS.length)],
+      alpha: 0.18 + Math.random() * 0.42,
+      twinkleDepth: 0.20 + Math.random() * 0.36,
+      twinklePhase: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.55 + Math.random() * 1.15,
+    }));
+  }
+
+  function block(x, y, color, alpha = 1) {
+    ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+    ctx.fillStyle = rgb(color);
+    ctx.fillRect(x, y, 1, 1);
+    ctx.globalAlpha = 1;
+  }
+
+  function starTwinkle(star, now) {
+    if (motionQuery.matches) {
+      return 1;
+    }
+
+    const time = now * 0.001 * star.twinkleSpeed + star.twinklePhase;
+    const pulse = (Math.sin(time) + 1) / 2;
+    const shimmer = (Math.sin(time * 0.43 + star.twinklePhase * 1.8) + 1) / 2;
+
+    return Math.min(1.18, 0.46 + pulse * star.twinkleDepth + shimmer * 0.18);
+  }
+
+  function drawStars(now) {
+    ctx.globalCompositeOperation = "source-over";
+
+    stars.forEach((star) => {
+      block(star.x, star.y, star.color, star.alpha * state.starBrightness * starTwinkle(star, now));
+    });
+  }
+
+  function draw(now = 0) {
+    if (!baseImage) {
+      return;
+    }
+
+    ctx.putImageData(baseImage, 0, 0);
+    drawStars(now);
+  }
+
+  function animate(now) {
+    draw(now);
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (animationFrame || motionQuery.matches) {
+      return;
+    }
+
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  function stopAnimation() {
+    if (!animationFrame) {
+      return;
+    }
+
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+  }
+
+  function syncMotionPreference() {
+    if (motionQuery.matches) {
+      stopAnimation();
+      draw(performance.now());
+      return;
+    }
+
+    startAnimation();
+  }
+
+  applyCssVariables();
+  resize();
+  syncMotionPreference();
+  window.addEventListener("resize", resize);
+  if (typeof motionQuery.addEventListener === "function") {
+    motionQuery.addEventListener("change", syncMotionPreference);
+  } else {
+    motionQuery.addListener(syncMotionPreference);
+  }
 }
 
 async function loadManifest() {

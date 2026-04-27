@@ -1,6 +1,11 @@
 /* pugtools — home page */
 
 :root {
+  --void:        #060914;
+  --deep-purple: #18122b;
+  --space-blue: #0f2742;
+  --space-cyan: #0f3f4f;
+  --content-dim: 0.30;
   --bg:          #080c13;
   --bg-card:     #0d1720;
   --bg-hover:    #111f2e;
@@ -35,19 +40,67 @@ body {
   font-family: "Inter", system-ui, sans-serif;
   line-height: 1.6;
   color: var(--ink);
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(circle at 14% 10%, rgba(91, 159, 214, 0.14) 0%, transparent 28%),
-    radial-gradient(circle at 84% 8%, rgba(240, 172, 48, 0.12) 0%, transparent 22%),
-    radial-gradient(circle at 50% 100%, rgba(45, 212, 191, 0.12) 0%, transparent 34%),
-    linear-gradient(160deg, #060b14 0%, #08111b 52%, #03070f 100%);
-  background-size: 140% 140%, 140% 140%, 130% 130%, 100% 100%;
-  background-attachment: fixed;
+  background: var(--void);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+#main,
+.page-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.space-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--void);
+  filter: saturate(1.04) contrast(1.02);
+  pointer-events: none;
+}
+
+.space-background canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.space-background__pixel-overlay,
+.space-background__content-wash,
+.space-background__vignette {
+  position: absolute;
+  inset: 0;
+}
+
+.space-background__pixel-overlay {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.01) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 4px);
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+}
+
+.space-background__content-wash {
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.62) 0 34%, rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.48) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.08) 45%, rgba(0, 0, 0, 0.32));
+  opacity: var(--content-dim);
+}
+
+.space-background__vignette {
+  background:
+    radial-gradient(circle at 50% 44%, transparent 0 38%, rgba(0, 0, 0, 0.28) 72%, rgba(0, 0, 0, 0.78) 100%),
+    linear-gradient(90deg, rgba(0, 0, 8, 0.46), transparent 45%, rgba(6, 28, 48, 0.06));
 }
 
 :focus-visible {
