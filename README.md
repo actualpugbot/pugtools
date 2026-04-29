@@ -11,7 +11,7 @@ This repo is being prepared to become the host repo for those tools, but the ind
 - Shared client-side behavior and metadata loading in [site.js](/home/actualpug/dev/pugtools/site.js)
 - Tool metadata and future import targets in [shared/tools.json](/home/actualpug/dev/pugtools/shared/tools.json)
 - Analytics helpers in [shared/analytics.js](/home/actualpug/dev/pugtools/shared/analytics.js)
-- Preview images and social assets in `images/` and `social-card.svg`
+- Preview images and social assets in `images/` and `social-card.png`
 
 The `tools/` folder is not a tool directory yet. Its current index file redirects back to the homepage until tools are imported individually.
 

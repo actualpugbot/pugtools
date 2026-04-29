@@ -1,9 +1,9 @@
 const FALLBACK_MANIFEST = {
   brand: {
     name: "pugtools",
-    tagline: "Minecraft tools for builders, creators, and players.",
-    description: "Fast Minecraft utilities and practical guides to help you build, plan, optimize, and create without bouncing between unrelated sites.",
-    shortPitch: "One place for practical Minecraft tools.",
+    tagline: "Small Minecraft tools to keep nearby.",
+    description: "A collection of free Minecraft tools for planning builds, checking enchantments, brewing potions, converting files, and making custom mob sounds.",
+    shortPitch: "Small Minecraft tools to keep nearby.",
     audiences: ["Builders", "Content creators", "Map makers", "Technical players", "General players"],
   },
   categories: [
@@ -506,7 +506,7 @@ function createSiteFooter(brand, tools) {
   const intro = element("div", { className: "site-footer__intro" });
   intro.append(
     element("p", { className: "eyebrow eyebrow--tight", text: "pugtools" }),
-    element("h2", { className: "site-footer__title", text: brand.shortPitch || "One place for practical Minecraft tools." }),
+    element("h2", { className: "site-footer__title", text: brand.shortPitch || "Small Minecraft tools to keep nearby." }),
     element("p", {
       className: "site-footer__copy",
       text: brand.description || FALLBACK_MANIFEST.brand.description,
@@ -537,7 +537,7 @@ function createSiteFooter(brand, tools) {
   const meta = element("div", { className: "site-footer__meta" });
   meta.append(
     element("p", {
-      text: `© ${new Date().getFullYear()} ${brand.name || "pugtools"}. Built for practical Minecraft planning, reference, and creation.`,
+      text: `© ${new Date().getFullYear()} ${brand.name || "pugtools"}. Built for Minecraft planning, lookups, and weird little chores.`,
     }),
   );
 

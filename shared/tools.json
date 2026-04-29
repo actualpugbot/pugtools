@@ -1,9 +1,9 @@
 {
   "brand": {
     "name": "pugtools",
-    "tagline": "Minecraft tools for builders, creators, and players.",
-    "description": "Fast Minecraft utilities and practical guides to help you build, plan, optimize, and create without bouncing between unrelated sites.",
-    "shortPitch": "One place for practical Minecraft tools.",
+    "tagline": "Small Minecraft tools to keep nearby.",
+    "description": "A collection of free Minecraft tools for planning builds, checking enchantments, brewing potions, converting files, and making custom mob sounds.",
+    "shortPitch": "Small Minecraft tools to keep nearby.",
     "audiences": [
       "Builders",
       "Content creators",
