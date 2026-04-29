@@ -32,7 +32,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Circle Generator",
       shortName: "Circle",
-      description: "Plan block-perfect circles with diameter controls, quadrant views, and quick PNG export.",
+      description: "Make clean circles in the block game.",
       path: "/circle-generator/",
       slug: "circle",
       kind: "Building utility",
@@ -44,7 +44,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Curve Generator",
       shortName: "Curve",
-      description: "Lay out arches and custom curves with editable handles, coordinate copy, and fast preview export.",
+      description: "Create curves with Bezier handles and thickness controls.",
       path: "/curve-generator/",
       slug: "curve",
       kind: "Layout planner",
@@ -56,7 +56,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Enchant Optimizer",
       shortName: "Enchant",
-      description: "Find lower-cost anvil merge orders for stacked enchant plans without spreadsheet cleanup.",
+      description: "Stop wasting your XP and getting \"too expensive\" messages. Enchant the right way.",
       path: "/enchant-optimizer/",
       slug: "enchant",
       kind: "Optimization planner",
@@ -68,7 +68,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Mob Dub",
       shortName: "Mob Dub",
-      description: "Browse mob sound sets, swap in your own takes, and export a resource pack without the manual cleanup.",
+      description: "Replace mob sounds with recordings or uploaded sound files.",
       path: "/mob-dub/",
       slug: "mob-dub",
       kind: "Creator workflow",
@@ -80,7 +80,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Potions Plus",
       shortName: "Potions",
-      description: "Browse brewing chains, search potion outcomes, and move through recipes without tab chaos.",
+      description: "Finally, an easy-to-understand brewing guide that doesn't look awful.",
       path: "/potions-plus/",
       slug: "potions",
       kind: "Reference guide",
@@ -92,7 +92,7 @@ const FALLBACK_MANIFEST = {
     {
       name: "Conversion Studio",
       shortName: "Convert",
-      description: "Convert audio and image files between formats in the browser without uploads or installs.",
+      description: "Convert any audio format to another audio format, or any image format to another image format.",
       path: "/conversion-studio/",
       slug: "conversion-studio",
       kind: "File utility",
