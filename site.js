@@ -108,6 +108,12 @@ const SPACE_BACKGROUND_DEFAULTS = {
   pixelSize: 6,
   starDensity: 0.55,
   starBrightness: 0.30,
+  starVisibleMin: 2800,
+  starVisibleMax: 9200,
+  starHiddenMin: 180,
+  starHiddenMax: 1100,
+  starFadeMin: 420,
+  starFadeMax: 1400,
   bgVoid: "#060914",
   bgPurple: "#18122b",
   bgBlue: "#0f2742",
@@ -188,6 +194,10 @@ function initSpaceBackground() {
     ];
   }
 
+  function randomBetween(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
   function backgroundPalette() {
     return {
       void: hexToRgb(state.bgVoid),
@@ -260,16 +270,48 @@ function initSpaceBackground() {
 
   function createStars() {
     const count = Math.floor((width * height) / 4200 * state.starDensity);
+    const now = performance.now();
 
-    stars = Array.from({ length: count }, () => ({
-      x: Math.floor(Math.random() * lowW),
-      y: Math.floor(Math.random() * lowH),
-      color: SPACE_STAR_COLORS[Math.floor(Math.random() * SPACE_STAR_COLORS.length)],
-      alpha: 0.18 + Math.random() * 0.42,
-      twinkleDepth: 0.20 + Math.random() * 0.36,
-      twinklePhase: Math.random() * Math.PI * 2,
-      twinkleSpeed: 0.55 + Math.random() * 1.15,
-    }));
+    stars = Array.from({ length: count }, () => createStar(now, true));
+  }
+
+  function createStar(now, visibleImmediately = false) {
+    const star = {};
+    randomizeStar(star, now, visibleImmediately);
+    return star;
+  }
+
+  function randomizeStar(star, now, visibleImmediately = false) {
+    const previousX = star.x;
+    const previousY = star.y;
+
+    star.x = Math.floor(Math.random() * lowW);
+    star.y = Math.floor(Math.random() * lowH);
+
+    for (let i = 0; i < 5 && lowW * lowH > 1 && star.x === previousX && star.y === previousY; i += 1) {
+      star.x = Math.floor(Math.random() * lowW);
+      star.y = Math.floor(Math.random() * lowH);
+    }
+
+    if (lowW * lowH > 1 && star.x === previousX && star.y === previousY) {
+      if (lowW > 1) {
+        star.x = (star.x + 1) % lowW;
+      } else {
+        star.y = (star.y + 1) % lowH;
+      }
+    }
+
+    star.color = SPACE_STAR_COLORS[Math.floor(Math.random() * SPACE_STAR_COLORS.length)];
+    star.alpha = 0.18 + Math.random() * 0.42;
+    star.twinkleDepth = 0.20 + Math.random() * 0.36;
+    star.twinklePhase = Math.random() * Math.PI * 2;
+    star.twinkleSpeed = 0.55 + Math.random() * 1.15;
+    star.fadeInDuration = randomBetween(state.starFadeMin, state.starFadeMax);
+    star.fadeOutDuration = randomBetween(state.starFadeMin, state.starFadeMax);
+    star.appearedAt = visibleImmediately ? now - star.fadeInDuration : now;
+    star.visibleUntil = now + randomBetween(state.starVisibleMin, state.starVisibleMax);
+    star.fadeOutStartedAt = 0;
+    star.hiddenUntil = 0;
   }
 
   function block(x, y, color, alpha = 1) {
@@ -291,11 +333,49 @@ function initSpaceBackground() {
     return Math.min(1.18, 0.46 + pulse * star.twinkleDepth + shimmer * 0.18);
   }
 
+  function updateStarLifecycle(star, now) {
+    if (motionQuery.matches) {
+      return;
+    }
+
+    if (star.fadeOutStartedAt && now >= star.hiddenUntil) {
+      randomizeStar(star, now);
+      return;
+    }
+
+    if (!star.fadeOutStartedAt && now >= star.visibleUntil) {
+      star.fadeOutStartedAt = now;
+      star.hiddenUntil = now + star.fadeOutDuration + randomBetween(state.starHiddenMin, state.starHiddenMax);
+    }
+  }
+
+  function starVisibility(star, now) {
+    if (motionQuery.matches) {
+      return 1;
+    }
+
+    const fadeIn = Math.min(1, Math.max(0, (now - star.appearedAt) / star.fadeInDuration));
+
+    if (!star.fadeOutStartedAt) {
+      return fadeIn;
+    }
+
+    const fadeOut = Math.min(1, Math.max(0, (now - star.fadeOutStartedAt) / star.fadeOutDuration));
+    return fadeIn * (1 - fadeOut);
+  }
+
   function drawStars(now) {
     ctx.globalCompositeOperation = "source-over";
 
     stars.forEach((star) => {
-      block(star.x, star.y, star.color, star.alpha * state.starBrightness * starTwinkle(star, now));
+      updateStarLifecycle(star, now);
+
+      const visibility = starVisibility(star, now);
+      if (visibility <= 0.01) {
+        return;
+      }
+
+      block(star.x, star.y, star.color, star.alpha * state.starBrightness * starTwinkle(star, now) * visibility);
     });
   }
 
