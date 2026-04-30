@@ -160,9 +160,20 @@ function initSpaceBackground() {
   let lowW = 0;
   let lowH = 0;
   let stars = [];
+  let cardSparkles = [];
   let baseImage = null;
   let animationFrame = 0;
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const pointerQuery = window.matchMedia("(pointer: fine)");
+  const pointer = {
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    activity: 0,
+    targetActivity: 0,
+    seen: false,
+  };
 
   function rgb(color, alpha = 1) {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
@@ -218,8 +229,13 @@ function initSpaceBackground() {
   function resize() {
     width = window.innerWidth;
     height = window.innerHeight;
+    pointer.x = pointer.seen ? clamp(pointer.targetX, 0, width) : width * 0.5;
+    pointer.y = pointer.seen ? clamp(pointer.targetY, 0, height) : height * 0.45;
+    pointer.targetX = pointer.x;
+    pointer.targetY = pointer.y;
     lowW = Math.max(1, Math.ceil(width / state.pixelSize));
     lowH = Math.max(1, Math.ceil(height / state.pixelSize));
+    cardSparkles = [];
     canvas.width = lowW;
     canvas.height = lowH;
     ctx.imageSmoothingEnabled = false;
@@ -321,6 +337,38 @@ function initSpaceBackground() {
     ctx.globalAlpha = 1;
   }
 
+  function canUsePointerEffects() {
+    return !motionQuery.matches && pointerQuery.matches;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function advancePointerState() {
+    pointer.x += (pointer.targetX - pointer.x) * 0.22;
+    pointer.y += (pointer.targetY - pointer.y) * 0.22;
+    pointer.activity += (pointer.targetActivity - pointer.activity) * 0.18;
+  }
+
+  function starPointerGlow(star) {
+    if (!canUsePointerEffects() || pointer.activity <= 0.02) {
+      return 0;
+    }
+
+    const starX = (star.x + 0.5) * state.pixelSize;
+    const starY = (star.y + 0.5) * state.pixelSize;
+    const distance = Math.hypot(pointer.x - starX, pointer.y - starY);
+    const radius = 74;
+
+    if (distance >= radius) {
+      return 0;
+    }
+
+    const proximity = 1 - distance / radius;
+    return proximity * proximity * pointer.activity;
+  }
+
   function starTwinkle(star, now) {
     if (motionQuery.matches) {
       return 1;
@@ -375,7 +423,49 @@ function initSpaceBackground() {
         return;
       }
 
-      block(star.x, star.y, star.color, star.alpha * state.starBrightness * starTwinkle(star, now) * visibility);
+      const glow = starPointerGlow(star);
+      const alpha = star.alpha * state.starBrightness * starTwinkle(star, now) * visibility;
+
+      if (glow > 0.08) {
+        const glowAlpha = alpha * glow * 0.42;
+        block(star.x - 1, star.y, star.color, glowAlpha);
+        block(star.x + 1, star.y, star.color, glowAlpha);
+        block(star.x, star.y - 1, star.color, glowAlpha * 0.72);
+        block(star.x, star.y + 1, star.color, glowAlpha * 0.72);
+      }
+
+      block(star.x, star.y, star.color, alpha * (1 + glow * 1.85));
+    });
+  }
+
+  function drawCardSparkles(now) {
+    if (motionQuery.matches || !cardSparkles.length) {
+      return;
+    }
+
+    cardSparkles = cardSparkles.filter((sparkle) => {
+      const age = now - sparkle.createdAt - sparkle.delay;
+      return age < sparkle.duration;
+    });
+
+    cardSparkles.forEach((sparkle) => {
+      const age = now - sparkle.createdAt - sparkle.delay;
+
+      if (age <= 0) {
+        return;
+      }
+
+      const progress = clamp(age / sparkle.duration, 0, 1);
+      const fade = Math.sin(progress * Math.PI);
+      const twinkle = 0.78 + Math.sin(now * 0.006 + sparkle.phase) * 0.22;
+      const alpha = sparkle.alpha * fade * twinkle;
+
+      block(sparkle.x, sparkle.y, sparkle.color, alpha);
+
+      if (alpha > 0.22) {
+        block(sparkle.x + sparkle.xWing, sparkle.y, sparkle.color, alpha * 0.28);
+        block(sparkle.x, sparkle.y + sparkle.yWing, sparkle.color, alpha * 0.22);
+      }
     });
   }
 
@@ -384,8 +474,10 @@ function initSpaceBackground() {
       return;
     }
 
+    advancePointerState();
     ctx.putImageData(baseImage, 0, 0);
     drawStars(now);
+    drawCardSparkles(now);
   }
 
   function animate(now) {
@@ -412,6 +504,9 @@ function initSpaceBackground() {
 
   function syncMotionPreference() {
     if (motionQuery.matches) {
+      pointer.targetActivity = 0;
+      pointer.activity = 0;
+      cardSparkles = [];
       stopAnimation();
       draw(performance.now());
       return;
@@ -420,14 +515,130 @@ function initSpaceBackground() {
     startAnimation();
   }
 
+  function listenToMediaQuery(query, handler) {
+    if (typeof query.addEventListener === "function") {
+      query.addEventListener("change", handler);
+    } else {
+      query.addListener(handler);
+    }
+  }
+
   applyCssVariables();
   resize();
   syncMotionPreference();
   window.addEventListener("resize", resize);
-  if (typeof motionQuery.addEventListener === "function") {
-    motionQuery.addEventListener("change", syncMotionPreference);
-  } else {
-    motionQuery.addListener(syncMotionPreference);
+  document.addEventListener("pointermove", handlePointerMove, { passive: true });
+  document.addEventListener("pointerover", handleToolCardPointerOver, { passive: true });
+  document.addEventListener("pointerout", handlePointerOut, { passive: true });
+  document.addEventListener("focusin", handleToolCardFocus);
+  document.addEventListener("mouseleave", settlePointer);
+  window.addEventListener("blur", settlePointer);
+  listenToMediaQuery(motionQuery, syncMotionPreference);
+  listenToMediaQuery(pointerQuery, syncMotionPreference);
+
+  function handlePointerMove(event) {
+    if (!canUsePointerEffects()) {
+      return;
+    }
+
+    pointer.targetX = clamp(event.clientX, 0, width);
+    pointer.targetY = clamp(event.clientY, 0, height);
+    pointer.targetActivity = 1;
+    pointer.seen = true;
+  }
+
+  function handlePointerOut(event) {
+    if (!event.relatedTarget) {
+      settlePointer();
+    }
+  }
+
+  function handleToolCardPointerOver(event) {
+    if (motionQuery.matches) {
+      return;
+    }
+
+    const target = event.target instanceof Element ? event.target : null;
+    const card = target?.closest(".tool-card");
+
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+
+    if (event.relatedTarget instanceof Node && card.contains(event.relatedTarget)) {
+      return;
+    }
+
+    spawnCardSparkles(card);
+  }
+
+  function handleToolCardFocus(event) {
+    if (motionQuery.matches) {
+      return;
+    }
+
+    const target = event.target instanceof Element ? event.target : null;
+    const card = target?.closest(".tool-card");
+
+    if (card instanceof HTMLElement) {
+      spawnCardSparkles(card);
+    }
+  }
+
+  function spawnCardSparkles(card) {
+    const rect = card.getBoundingClientRect();
+
+    if (rect.bottom < 0 || rect.top > height || rect.right < 0 || rect.left > width) {
+      return;
+    }
+
+    const now = performance.now();
+    const count = Math.max(10, Math.min(16, Math.round((rect.width + rect.height) / 58)));
+
+    for (let i = 0; i < count; i += 1) {
+      const edge = Math.floor(Math.random() * 4);
+      const offset = randomBetween(8, 34);
+      const alongX = randomBetween(rect.left + 10, rect.right - 10);
+      const alongY = randomBetween(rect.top + 10, rect.bottom - 10);
+      let clientX = alongX;
+      let clientY = alongY;
+
+      if (edge === 0) {
+        clientY = rect.top - offset;
+      } else if (edge === 1) {
+        clientX = rect.right + offset;
+      } else if (edge === 2) {
+        clientY = rect.bottom + offset;
+      } else {
+        clientX = rect.left - offset;
+      }
+
+      clientX = clamp(clientX, 0, width);
+      clientY = clamp(clientY, 0, height);
+
+      cardSparkles.push({
+        clientX,
+        clientY,
+        x: Math.round(clientX / state.pixelSize),
+        y: Math.round(clientY / state.pixelSize),
+        color: SPACE_STAR_COLORS[Math.floor(Math.random() * SPACE_STAR_COLORS.length)],
+        alpha: randomBetween(0.18, 0.46),
+        createdAt: now,
+        delay: randomBetween(0, 220),
+        duration: randomBetween(880, 1450),
+        phase: Math.random() * Math.PI * 2,
+        xWing: Math.random() > 0.5 ? 1 : -1,
+        yWing: Math.random() > 0.5 ? 1 : -1,
+      });
+    }
+
+    if (cardSparkles.length > 96) {
+      cardSparkles.splice(0, cardSparkles.length - 96);
+    }
+  }
+
+  function settlePointer() {
+    pointer.targetActivity = 0;
   }
 }
 
