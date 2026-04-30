@@ -104,6 +104,8 @@ const FALLBACK_MANIFEST = {
   ],
 };
 
+const MINECRAFT_DISCLAIMER = "NOT AN OFFICIAL MINECRAFT WEBSITE. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.";
+
 const SPACE_BACKGROUND_DEFAULTS = {
   pixelSize: 6,
   starDensity: 0.55,
@@ -747,6 +749,9 @@ function createSiteFooter(brand, tools) {
 
   const meta = element("div", { className: "site-footer__meta" });
   meta.append(
+    element("p", {
+      text: MINECRAFT_DISCLAIMER,
+    }),
     element("p", {
       text: `© ${new Date().getFullYear()} ${brand.name || "pugtools"}. Built for Minecraft planning, lookups, and weird little chores.`,
     }),
